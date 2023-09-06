@@ -121,6 +121,10 @@ DADS使用图论中的最大流最小割算法对DAG拓扑结构进行了分析�
 
 #### 3.1 传统方法
 
++ [MODI: Mobile Deep Inference Made Efficient by Edge Computing](https://www.usenix.org/system/files/conference/hotedge18/hotedge18-papers-ogden.pdf)（MODI）
+  + 2018
+  + 提出了可行方案，但没有具体研究： 1) 运行时动态选择最佳模型。 2) 在边缘服务器上存储高质量的模型 3) 定期在边缘位置更新模型，保证低时延。
+
 + [Fine-grained Cloud Edge Collaborative Dynamic Task Scheduling Based on DNN Layer-Partitioning](https://www.computer.org/csdl/proceedings-article/msn/2022/645700a155/1LUtVyqXmdW)（DLPDTS）
   + 2022
   + 出自MSN，级别为CCF-C
