@@ -135,3 +135,8 @@ DADS使用图论中的最大流最小割算法对DAG拓扑结构进行了分析�
 + [“DRL + FL”: An intelligent resource allocation model based on deep reinforcement learning for Mobile Edge Computing](https://www.sciencedirect.com/science/article/abs/pii/S014036641932122X)
   + 2020
   + 本篇论文的关注点在于强化学习解决资源分配，但是其主要解决的是使用联邦学习优化强化学习中agent的训练。
+
++ [Accuracy-Guaranteed Collaborative DNN Inference in Industrial IoT via Deep Reinforcement Learning](https://ieeexplore.ieee.org/document/9170818)
+  + 2020 TII - CCFC
+  + 主要考虑了采样率自适应问题（调整输入数据）。 1）将问题表述为约束马尔可夫决策过程(CMDP)，综合考虑了推理任务卸载和边缘计算资源分配。 2）通过一般强化学习(RL)算法直接求解。
+  + 虽然是应用于工业物联网场景，但是对于模型调度和计算资源分配还是一篇非常值得读的论文，以及其中如何用强化学习构建场景的过程。
