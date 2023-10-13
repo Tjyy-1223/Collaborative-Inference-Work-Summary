@@ -113,7 +113,7 @@ DADS使用图论中的最大流最小割算法对DAG拓扑结构进行了分析�
 
 
 
-### 3 划分调度
+### 3 划分调度+连续任务
 
 在多个边缘服务器和边缘设备的集群中，使DNN任务进行合理调度，降低任务完成的平均时延或平均能耗。在进行调度的过程中可以使用垂直划分和水平划分，也可以直接将一个DNN任务作为划分单位。
 
@@ -124,11 +124,25 @@ DADS使用图论中的最大流最小割算法对DAG拓扑结构进行了分析�
 + [MODI: Mobile Deep Inference Made Efficient by Edge Computing](https://www.usenix.org/system/files/conference/hotedge18/hotedge18-papers-ogden.pdf)（MODI）
   + 2018
   + 提出了可行方案，但没有具体研究： 1) 运行时动态选择最佳模型。 2) 在边缘服务器上存储高质量的模型 3) 定期在边缘位置更新模型，保证低时延。
-
 + [Fine-grained Cloud Edge Collaborative Dynamic Task Scheduling Based on DNN Layer-Partitioning](https://www.computer.org/csdl/proceedings-article/msn/2022/645700a155/1LUtVyqXmdW)（DLPDTS）
   + 2022
   + 出自MSN，级别为CCF-C
   + 提出了一种基于DLP的云边协同细粒度动态任务调度机制，该机制包括DLP选点算法和动态任务调度算法两部分。
++ [Joint optimization of DNN partition and scheduling for mobile cloud computing](https://dl.acm.org/doi/abs/10.1145/3472456.3472468)（JPS）
+  + 2021
+  + 出自CCFB会议 ICCP
+  + 研究了如何在连续任务情况下通过二分查找寻找最优划分策略
+  + 证明了连续任务场景中最优策略的选择不是一成不变的
+
++ [Joint Optimization of DNN Partition and Continuous Task Scheduling for Digital Twin-Aided MEC Network With Deep Reinforcement Learning](https://ieeexplore.ieee.org/document/10070781)
+  + 2023 IEEE Access
+  + RL解决信道分配和传输功率 + 数字孪生技术
+  + 传统方法模型划分
+
++ [Partition placement and resource allocation for multiple DNN-based applications in heterogeneous IoT environments](https://ieeexplore.ieee.org/document/10014999)
+  + 2023 
+  + 主要讲解分区放置DNN模型
+
 
 #### 3.2 强化学习
 
@@ -140,3 +154,14 @@ DADS使用图论中的最大流最小割算法对DAG拓扑结构进行了分析�
   + 2020 TII - CCFC
   + 主要考虑了采样率自适应问题（调整输入数据）。 1）将问题表述为约束马尔可夫决策过程(CMDP)，综合考虑了推理任务卸载和边缘计算资源分配。 2）通过一般强化学习(RL)算法直接求解。
   + 虽然是应用于工业物联网场景，但是对于模型调度和计算资源分配还是一篇非常值得读的论文，以及其中如何用强化学习构建场景的过程。
+
++ [Joint DNN partition and resource allocation optimization for energy-constrained hierarchical edge-cloud systems](https://ieeexplore.ieee.org/document/9937150)
+  + 2022
+  + 关注能耗优化+ 强化学习分层，RL用来选取划分点
+  + 启发式算法负责云端算力分配，使用 DDPG
+  + 云边协同、任务在slot内执行完成，单云中心+单边缘服务器
++ [Joint DNN partitioning and task offloading in mobile edge computing via deep reinforcement learning](https://www.researchsquare.com/article/rs-2901233/v1)
+  + 2023 比较新的领域方向
+  + 研究了DNN划分和任务卸载的能量、延迟联合优化问题
+  + 使用基于PPO的DPTO解决DNN分区和任务卸载问题
+  + 多个终端设备 + 单边缘服务器，将DQN DDQN 以及 PPO进行对比
