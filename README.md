@@ -1,30 +1,15 @@
 ## DNN云边协同工作汇总(持续更新)
 
-云边协同旨在充分利用云边端资源完成DNN任务的推理计算，主要可以分为三个方面
+云边协同旨在充分利用云边端资源完成DNN任务的推理计算，将整体模型进行划分后，利用终端设备、边缘服务器以及云计算中心的计算资源，将DNN划分为多个部分，分别部署在不同设备上进行推理。
 
-+ 垂直划分：将整体模型进行划分，分别放置在云边端上进行推理。
-+ 水平划分：将模型的某一层分为多个部分，利用多个边缘节点并行计算。
-+ 资源划分：在云边端资源上利用各种策略进行资源调度和分配。
++ 充分利用系统中可用的计算资源
++ 降低输入数据的传输开销
 
-下面分别从三个方面汇总相关的论文工作。
+## 1 DNN Partitioning
 
-|       类型        |   小类型   | 统计论文数量 |
-| :---------------: | :--------: | :----------: |
-|     垂直划分      |  链式拓扑  |      5       |
-|                   |  DAG拓扑   |      3       |
-|                   |  提前退出  |      4       |
-|                   | 预测器构建 |      5       |
-|     水平划分      |  水平划分  |      6       |
-| 资源调度+连续任务 |  传统方法  |      5       |
-|                   |  强化学习  |      4       |
+**DNN Partitioning 主要研究如何对单个DNN任务进行协同推理**
 
-
-
-### 1 垂直划分
-
-将整体模型进行划分，分别放置在云边端上进行推理。
-
-#### 1.1 链式拓扑
+### 1.1 链式拓扑
 
 垂直划分首次由neurosurgeon这篇论文提出，首次提出了云边协同+模型划分的过程来降低模型推理时延。
 
@@ -46,7 +31,9 @@
   + 2023
   + 云-边-端联合协同计算。
 
-#### 1.2 DAG拓扑
+
+
+### 1.2 DAG拓扑
 
 DADS使用图论中的最大流最小割算法对DAG拓扑结构进行了分析，解决了一部分含有拓扑结构的模型的划分问题。
 
@@ -61,8 +48,9 @@ DADS使用图论中的最大流最小割算法对DAG拓扑结构进行了分析�
 + [Mobility-Included DNN Partition Offloading from Mobile Devices to Edge Clouds](https://www.mdpi.com/1424-8220/21/1/229)（MDPO）
   + 2021
   + 出一种包含移动性的DNN分区卸载算法(MDPO)，最小化完成DNN作业的总延迟。
-
-#### 1.3 结合提前退出机制
++ [MODI: Mobile Deep Inference Made Efficient by Edge Computing](https://www.usenix.org/system/files/conference/hotedge18/hotedge18-papers-ogden.pdf)（MODI）
+  + 2018
+  + 提出了可行方案，但没有具体研究： 1) 运行时动态选择最佳模型。 2) 在边缘服务器上存储高质量的模型 3) 定期在边缘位置更新模型，保证低时延。
 
 + [BranchyNet: Fast Inference via Early Exiting from Deep Neural Networks](https://arxiv.org/abs/1709.01686)
   + 讲解了DNN模型的提前退出机制
@@ -80,9 +68,7 @@ DADS使用图论中的最大流最小割算法对DAG拓扑结构进行了分析�
   + 出自JPDC，级别为CCF-B
   + 可以认为是结合了DADS + BranchyNet算法，使算法能够适应DAG拓扑结构。
 
-#### 1.4 predictor预测器构建
-
-对于DNN模型推理时延的预测是垂直划分中重要的一部分，总结了一些讲解推理时延预测的论文，如下。
+对于DNN模型推理时延的预测是模型划分中重要的一部分，总结了一些讲解推理时延预测的论文，如下：
 
 + [inference latency prediction at the edge](https://arxiv.org/pdf/2210.02620.pdf)
 + [nn-Meter: Towards Accurate Latency Prediction of Deep-Learning Model Inference on Diverse Edge Devices](https://air.tsinghua.edu.cn/pdf/nn-Meter-Towards-Accurate-Latency-Prediction-of-Deep-Learning-Model-Inference-on-Diverse-Edge-Devices.pdf)
@@ -92,7 +78,7 @@ DADS使用图论中的最大流最小割算法对DAG拓扑结构进行了分析�
 
 
 
-### 2 水平划分
+### 1.3 水平划分
 
 对DNN中的某一层进行分段划分，或者像网格一样划分后，使用多个边缘设备并行计算。
 
@@ -123,17 +109,44 @@ DADS使用图论中的最大流最小割算法对DAG拓扑结构进行了分析�
 
 
 
-### 3 划分调度+连续任务
+## 2 Task Offloaing
 
-在多个边缘服务器和边缘设备的集群中，使DNN任务进行合理调度，降低任务完成的平均时延或平均能耗。在进行调度的过程中可以使用垂直划分和水平划分，也可以直接将一个DNN任务作为划分单位。
++ [“DRL + FL”: An intelligent resource allocation model based on deep reinforcement learning for Mobile Edge Computing](https://www.sciencedirect.com/science/article/abs/pii/S014036641932122X)
+  + 2020
+  + 本篇论文的关注点在于使用DDQN算法与联邦学习结合解决边缘移动网络中的资源分配问题
+  + 提升了系统平均服务延迟、平均能耗以及负载均衡的问题
++ [Accuracy-Guaranteed Collaborative DNN Inference in Industrial IoT via Deep Reinforcement Learning](https://ieeexplore.ieee.org/document/9170818)
+  + 2020 TII - CCFC
+  + 主要考虑了采样率自适应问题（调整输入数据）。 1）将问题表述为约束马尔可夫决策过程(CMDP)，综合考虑了推理任务卸载和边缘计算资源分配。 2）通过一般强化学习(RL)算法直接求解。
+  + 虽然是应用于工业物联网场景，但是对于模型调度和计算资源分配还是一篇非常值得读的论文，以及其中如何用强化学习构建场景的过程。
 
-可以使用传统算法进行调度，也可以利用强化学习进行调度。
++ [Deep Reinforcement Learning-Based Task Offloading and Resource Allocation for Industrial IoT in MEC Federation System](https://ieeexplore.ieee.org/document/10210011)
+  + IEEE Access 2023
+  + 联合卸载决策和资源分配问题
+  + 建模称为马尔科夫决策过程，使用DDPG-PER进行解决
 
-#### 3.1 传统方法
++ [Partition placement and resource allocation for multiple DNN-based applications in heterogeneous IoT environments](https://ieeexplore.ieee.org/document/10014999)
 
-+ [MODI: Mobile Deep Inference Made Efficient by Edge Computing](https://www.usenix.org/system/files/conference/hotedge18/hotedge18-papers-ogden.pdf)（MODI）
-  + 2018
-  + 提出了可行方案，但没有具体研究： 1) 运行时动态选择最佳模型。 2) 在边缘服务器上存储高质量的模型 3) 定期在边缘位置更新模型，保证低时延。
+  + 2023 
+
+  + 主要讲解分区放置DNN模型
+
++ [Deep Reinforcement Learning Based ComputationOffloading and Trajectory Planning for Multi-UAV Cooperative Target Search](https://ieeexplore.ieee.org/document/9989360)
+  + 2023 IEEE JOURNAL ON SELECTED AREAS IN COMMUNICATIONS
+  + 新兴的边缘计算技术可以通过将任务卸载到地面边缘服务器来缓解这一问题。如何评估搜索过程以做出最优卸载决策和最优飞行轨迹是基础研究的挑战。
+  + 提出了一种基于深度强化学习(DRL)的多无人机协同目标搜索计算卸载决策和飞行方向选择优化方法。
++ [Deep Reinforcement Learning Based Dynamic Trajectory Control for UAV-Assisted Mobile Edge Computing](https://ieeexplore.ieee.org/document/9354996)
+  + 2022 IEEE TRANSACTIONS ON MOBILE COMPUTING
+  + 考虑了一个飞行移动边缘计算平台，其中UAV作为提供计算资源的设备，并使任务从UE上卸载。
+  + 提出了一种基于凸优化的轨迹控制算法(CAT)，该算法采用块坐标下降法(BCD)以迭代的方式。
+  + 为了在考虑环境动态的情况下进行实时决策，我们提出了一种基于深度强化学习的轨迹控制算法(RAT)。
+
+
+
+## 3 DNN Partitioning + Task Offloading
+
+在多个边缘服务器和终端设备组成的云边端系统中，使DNN任务进行合理调度，降低任务完成的平均时延或平均能耗。在进行调度的过程中可以使用垂直划分和水平划分，也可以直接将一个DNN任务作为划分单位。
+
 + [Fine-grained Cloud Edge Collaborative Dynamic Task Scheduling Based on DNN Layer-Partitioning](https://www.computer.org/csdl/proceedings-article/msn/2022/645700a155/1LUtVyqXmdW)（DLPDTS）
   + 2022
   + 出自MSN，级别为CCF-C
@@ -143,35 +156,50 @@ DADS使用图论中的最大流最小割算法对DAG拓扑结构进行了分析�
   + 出自CCFB会议 ICCP
   + 研究了如何在连续任务情况下通过二分查找寻找最优划分策略
   + 证明了连续任务场景中最优策略的选择不是一成不变的
-
 + [Joint Optimization of DNN Partition and Continuous Task Scheduling for Digital Twin-Aided MEC Network With Deep Reinforcement Learning](https://ieeexplore.ieee.org/document/10070781)
-  + 2023 IEEE Access
+  + **2023 IEEE Access** 目前找到最新的
   + RL解决信道分配和传输功率 + 数字孪生技术
   + 传统方法模型划分
-
-+ [Partition placement and resource allocation for multiple DNN-based applications in heterogeneous IoT environments](https://ieeexplore.ieee.org/document/10014999)
-  + 2023 
-  + 主要讲解分区放置DNN模型
-
-
-#### 3.2 强化学习
-
-+ [“DRL + FL”: An intelligent resource allocation model based on deep reinforcement learning for Mobile Edge Computing](https://www.sciencedirect.com/science/article/abs/pii/S014036641932122X)
-  + 2020
-  + 本篇论文的关注点在于强化学习解决资源分配，但是其主要解决的是使用联邦学习优化强化学习中agent的训练。
-
-+ [Accuracy-Guaranteed Collaborative DNN Inference in Industrial IoT via Deep Reinforcement Learning](https://ieeexplore.ieee.org/document/9170818)
-  + 2020 TII - CCFC
-  + 主要考虑了采样率自适应问题（调整输入数据）。 1）将问题表述为约束马尔可夫决策过程(CMDP)，综合考虑了推理任务卸载和边缘计算资源分配。 2）通过一般强化学习(RL)算法直接求解。
-  + 虽然是应用于工业物联网场景，但是对于模型调度和计算资源分配还是一篇非常值得读的论文，以及其中如何用强化学习构建场景的过程。
++ [Dynamic resource allocation for jointing vehicle-edge deep neural network inference](https://www.sciencedirect.com/science/article/abs/pii/S1383762121001004)
+  + SCI-II 区 **DNN动态分区+资源分配** 提出一种低复杂度算法解决 2021
+  + 用户设备请求增多->分配的资源是动态的，所以会导致模型最优分区也是动态的，主要解决这个问题
+  + 最小化所有车辆总体时延，这是np难问题
+  + 建模很好 可以参考一下
 
 + [Joint DNN partition and resource allocation optimization for energy-constrained hierarchical edge-cloud systems](https://ieeexplore.ieee.org/document/9937150)
-  + 2022
+  + 2022 SCI-2区
   + 关注能耗优化+ 强化学习分层，RL用来选取划分点
   + 启发式算法负责云端算力分配，使用 DDPG
   + 云边协同、任务在slot内执行完成，单云中心+单边缘服务器
 + [Joint DNN partitioning and task offloading in mobile edge computing via deep reinforcement learning](https://www.researchsquare.com/article/rs-2901233/v1)
-  + 2023 比较新的领域方向
+  + 2023 比较新的领域方向 Journal of cloud computing
   + 研究了DNN划分和任务卸载的能量、延迟联合优化问题
   + 使用基于PPO的DPTO解决DNN分区和任务卸载问题
   + 多个终端设备 + 单边缘服务器，将DQN DDQN 以及 PPO进行对比
+
++ [Reinforcement Learning Based Energy-Efficient Collaborative Inference for Mobile Edge Computing](https://ieeexplore.ieee.org/document/9984691/)
+  + 2022 SCI-I区 ，多个终端设备以及多个边缘设备
+  + 使用MA-DDPG 多智能体强化学习完成任务，并在真实设备上进行推理
+  + 每个边缘设备使用DDPG完成两个任务：选择分区点、选择哪个边缘设备
+
++ [Energy-Efficient Collaborative Inference in MEC: A Multi-Agent Reinforcement Learning Based Approach](https://ieeexplore.ieee.org/document/10064441?denied=)
+  + 2022 8th International Conference on Big Data Computing and Communications (BigCom)
+  
+  + 最优的分区点和边缘选择取决于特定深度学习架构的推理成本模型和从设备到边缘服务器的通道模型，这在实际的MEC中是具有挑战性的。
+
+  + 提出了一种基于多智能体强化学习的MEC节能协同推理方案，根据环境条件选择深度学习模型的分区点和协同边缘服务器。
+  
++ [Energy-Efficient Offloading for DNN-Based Smart IoT Systems in Cloud-Edge Environments](https://ieeexplore.ieee.org/document/9497712)
+  + 2021 TPDS
+  + 由于大规模深度神经网络的高计算成本，直接将其部署在能量受限的物联网设备中可能是不可行的。通过将计算密集型任务卸载到云或边缘，计算卸载技术为执行深度神经网络提供了一种可行的解决方案。
+  + 设计了一个新的系统能耗模型，该模型考虑了所有参与服务器(来自云和边缘)和物联网设备的运行时、切换和计算能耗。
+  + 提出了一种基于遗传算法算子自适应粒子群优化算法(SPSO-GA)的新型节能卸载策略，有效地对具有分层划分操作的DNN层进行卸载决策，降低了编码维数，提高了SPSO-GA的执行时间。
+  
+
++ [Edge-Assisted Distributed DNN Collaborative Computing Approach for Mobile Web Augmented Reality in 5G Networks](https://ieeexplore.ieee.org/document/9040203)
+
+
+
++ [DDPQN: An Efficient DNN Offloading Strategy in Local-Edge-Cloud Collaborative Environments](https://ieeexplore.ieee.org/abstract/document/9555248)
+
+
